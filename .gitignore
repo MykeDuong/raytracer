@@ -1,0 +1,10 @@
+./build/*
+./build/
+build
+./.cache/*
+./.cache/
+.cache
+
+./Testing/*
+./Testing/
+Testing
