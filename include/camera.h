@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <optional>
+#include <fstream>
 
 #include "hittable.h"
 #include "color.h"
@@ -21,22 +22,23 @@ public:
   Vect3  v_up              = { 0, 1, 0 };
 
   double defocus_angle     = 0;
-  double focus_distance    = 10;
+  double focus_distance    = 10.0;
 
   void render(const Hittable& world) {
     this->initialize();
 
-    std::cout << "P3\n" << this->image_width << " " << this->image_height << "\n255\n";
+    std::ofstream out_file{ "image.ppm" };
+    out_file << "P3\n" << this->image_width << " " << this->image_height << "\n255\n";
     for (int j = 0; j < this->image_height; j++) {
       std::clog << "[LOG] Scanlines remaining: " << (this->image_height - j) << std::endl;
       for (int i = 0; i < this->image_width; i++) {
         Color pixel_color { 0, 0, 0 };
-        for (int sample = 0; sample < samples_per_pixel; sample++) {
+        for (int sample = 0; sample < this->samples_per_pixel; sample++) {
           Ray r = this->get_ray(i, j);
           pixel_color += this->ray_color(r, this->max_ray_depth, world);
         }
-        pixel_color *= pixel_sample_scales;
-        pixel_color.write_color(std::cout);
+        pixel_color *= this->pixel_sample_scales;
+        pixel_color.write_color(out_file);
       }
     }
 
@@ -62,7 +64,7 @@ private:
 
     this->center = this->look_from;
 
-    const double theta = Utility::degrees_to_radians(vertical_fov);
+    const double theta = Utility::degrees_to_radians(this->vertical_fov);
     const double h = std::tan(theta / 2) * this->focus_distance;
     this->viewport_height = 2 * h;
     const double viewport_width = this->viewport_height  * ((double)this->image_width/this->image_height);
@@ -81,21 +83,21 @@ private:
 
     // Location of upper-left pixel
     const Point3 viewport_upper_left = this->center - (this->focus_distance * this->forward) - viewport_u / 2 - viewport_v / 2;
-    this->pixel00_location = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
+    this->pixel00_location = viewport_upper_left + 0.5 * (this->pixel_delta_u + this->pixel_delta_v);
 
     const double defocus_radius = this->focus_distance * std::tan(Utility::degrees_to_radians(this->defocus_angle / 2));
     this->defocus_disk_horizontal_radius = this->right * defocus_radius;
     this->defocus_disk_vertical_radius = this->up * defocus_radius;
 
     // Pixel sample scale
-    this->pixel_sample_scales = 1.0 / samples_per_pixel;
+    this->pixel_sample_scales = 1.0 / this->samples_per_pixel;
   };
 
   Ray get_ray(int i, int j) const {
     const Vect3 offset = this->sample_square();
     const Point3 pixel_sample = this->pixel00_location 
-                        + ((i + offset.x()) * pixel_delta_u)
-                        + ((j + offset.y()) * pixel_delta_v);
+                        + ((i + offset.x()) * this->pixel_delta_u)
+                        + ((j + offset.y()) * this->pixel_delta_v);
 
     const Point3 ray_origin = (this->defocus_angle <= 0) ? this->center : this->defocus_disk_sample();
     const Vect3 ray_direction = pixel_sample - ray_origin;
@@ -108,8 +110,7 @@ private:
 
   Point3 defocus_disk_sample() const {
     const Point3 p = random_in_unit_disk();
-    return this->center + (p[0] * defocus_disk_horizontal_radius) + (p[1] * defocus_disk_vertical_radius);
-
+    return this->center + (p[0] * this->defocus_disk_horizontal_radius) + (p[1] * this->defocus_disk_vertical_radius);
   };
 
   Color ray_color(const Ray& ray, int ray_depth, const Hittable& world) {

@@ -9,7 +9,7 @@
 #include "version.h"
 
 int main() {
-  std::clog << "# Raytracer Version " 
+  std::clog << "Raytracer Version " 
             << RAYTRACER_VERSION_MAJOR << "." << RAYTRACER_VERSION_MINOR 
             << std::endl;
 
@@ -56,8 +56,9 @@ int main() {
 
   // Camera
   Camera camera;
-  camera.samples_per_pixel = 500;
-  camera.max_ray_depth = 50;
+  camera.samples_per_pixel = 50;
+  camera.max_ray_depth = 10;
+  camera.image_width = 1200;
   camera.look_from    = { 13, 2, 3 };
   camera.look_at      = {  0, 0, 0 };
   camera.v_up         = {  0, 1, 0 };

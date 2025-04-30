@@ -17,6 +17,8 @@ public:
   virtual ~Material() = default;
 
   virtual std::optional<ScatterRecord> scatter(const Ray& ray_in, const HitRecord& record) const {
+    (void)ray_in;
+    (void)record;
     return std::nullopt;
   }
 };
@@ -26,6 +28,7 @@ public:
   Lambertian(const Color& albedo) :albedo(albedo) {};
 
   std::optional<ScatterRecord> scatter(const Ray& ray_in, const HitRecord& record) const override {
+    (void)ray_in;
     Vect3 scatter_direction = record.normal + random_unit_vector();
     if (scatter_direction.near_zero()) {
       scatter_direction = record.normal;

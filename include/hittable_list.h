@@ -1,8 +1,11 @@
 #pragma once
 
 #include "hittable.h"
+
+#include <optional>
 #include <memory>
 #include <vector>
+#include <optional>
 
 class HittableList : public Hittable {
 public:

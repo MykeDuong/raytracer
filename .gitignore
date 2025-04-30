@@ -1,6 +1,13 @@
 ./build/*
 ./build/
 build
+
+./.vs/*
+./.vs/
+.vs
+./out/*
+./out/
+out
 ./.cache/*
 ./.cache/
 .cache

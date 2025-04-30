@@ -37,7 +37,7 @@ public:
     return *this *= 1/t;
   };
 
-  constexpr double length() const {
+  double length() const {
     return std::sqrt(this->length_squared());
   };
 
@@ -113,7 +113,7 @@ constexpr inline Vect3 unit_vector(const Vect3& u) {
   return u / u.length();
 }
 
-constexpr inline Vect3 refract(const Vect3& uv, const Vect3& normal, const double etai_over_etat) {
+inline Vect3 refract(const Vect3& uv, const Vect3& normal, const double etai_over_etat) {
   const double cos_theta = std::fmin(dot(-uv, normal), 1.0);
   const Vect3 ray_out_perpendicular = etai_over_etat * (uv + cos_theta * normal);
   const Vect3 ray_out_parallel = -std::sqrt(std::fabs(1.0 - ray_out_perpendicular.length_squared())) * normal;
