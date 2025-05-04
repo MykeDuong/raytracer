@@ -23,7 +23,11 @@ int main() {
   for (int a = -11; a < 11; a++) {
     for (int b = -11; b < 11; b++) {
       const double choose_material = Utility::random_double();
-      const Point3 center { a + 0.9 * Utility::random_double(), 0.2, b + 0.9 * Utility::random_double() };
+      const Point3 center { 
+          a + 0.9 * Utility::random_double(), 
+          0.2,
+          b + 0.9 * Utility::random_double() 
+      };
       
       if ((center - Point3 {4, 0.2, 0}).length() > 0.9) {
         std::shared_ptr<Material> sphere_material;
@@ -56,8 +60,8 @@ int main() {
 
   // Camera
   Camera camera;
-  camera.samples_per_pixel = 50;
-  camera.max_ray_depth = 10;
+  camera.samples_per_pixel = 10;
+  camera.max_ray_depth = 20;
   camera.image_width = 1200;
   camera.look_from    = { 13, 2, 3 };
   camera.look_at      = {  0, 0, 0 };
