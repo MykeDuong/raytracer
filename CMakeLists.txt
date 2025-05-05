@@ -25,7 +25,7 @@ target_include_directories(raytracer PUBLIC "${PROJECT_BINARY_DIR}")
 # Platform-specific compiler flags
 target_compile_options(raytracer
   PRIVATE
-    $<$<CXX_COMPILER_ID:GNU,Clang>:-Wall -Werror -g>
+    $<$<CXX_COMPILER_ID:GNU,Clang>:-Wall -Werror -g -O3>
     $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX /O2 /Ob /Ob2 /favor:AMD64 /d2vzeroupper>
 )
 
