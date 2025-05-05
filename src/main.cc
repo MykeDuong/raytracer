@@ -7,6 +7,7 @@
 #include "sphere.h"
 #include "util.h"
 #include "version.h"
+#include "bvh_node.h"
 
 int main() {
   std::clog << "Raytracer Version " 
@@ -36,15 +37,18 @@ int main() {
           // Lambertian
           const Color albedo = Color::random() * Color::random();
           sphere_material = std::make_shared<Lambertian>(albedo);
+          const Point3 center2 = center + Vect3{ 0, Utility::random_double(0, 0.5), 0 };
+          world.add(std::make_shared<Sphere>(center, center2, 0.2, sphere_material));
         } else if (choose_material < 0.95) {
           // Metal
           const Color albedo = Color::random(0.5, 1);
           const double fuzz = Utility::random_double(0, 0.5);
           sphere_material = std::make_shared<Metal>(albedo, fuzz);
+          world.add(std::make_shared<Sphere>(center, 0.2, sphere_material));
         } else {
           sphere_material = std::make_shared<Dielectric>(1.5);
+          world.add(std::make_shared<Sphere>(center, 0.2, sphere_material));
         }
-        world.add(std::make_shared<Sphere>(center, 0.2, sphere_material));
       }
     }
   }
@@ -58,11 +62,13 @@ int main() {
   auto material3 = std::make_shared<Metal>(Color{0.7, 0.6, 0.5}, 0.0);
   world.add(std::make_shared<Sphere>(Point3(4, 1, 0), 1.0, material3));
 
+  world = HittableList(std::make_shared<BVHNode>(world));
+
   // Camera
   Camera camera;
-  camera.samples_per_pixel = 10;
+  camera.samples_per_pixel = 100;  
   camera.max_ray_depth = 20;
-  camera.image_width = 1200;
+  camera.image_width = 800;
   camera.look_from    = { 13, 2, 3 };
   camera.look_at      = {  0, 0, 0 };
   camera.v_up         = {  0, 1, 0 };

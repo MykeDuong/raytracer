@@ -7,7 +7,7 @@
 #include <vector>
 #include <optional>
 
-class HittableList : public Hittable {
+class HittableList final : public Hittable {
 public:
   std::vector<std::shared_ptr<Hittable>> objects;
 
@@ -18,6 +18,7 @@ public:
 
   void add(std::shared_ptr<Hittable> object) {
     objects.push_back(object);
+    this->bbox = BoundingBox(this->bbox, object->bounding_box());
   }
 
   std::optional<HitRecord> hit(const Ray& ray, const Interval ray_t) const override {
@@ -34,5 +35,7 @@ public:
     return result;
   }
 
-
+  BoundingBox bounding_box() const override { return this->bbox; }
+private:
+  BoundingBox bbox;
 };

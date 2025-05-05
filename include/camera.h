@@ -92,23 +92,14 @@ private:
     this->pixel00_location =
         viewport_upper_left + 0.5 * (this->pixel_delta_u + this->pixel_delta_v);
 
-    std::clog << pixel00_location.x() << " " << pixel00_location.y() << " " << pixel00_location.z() << std::endl;
-
     const double defocus_radius =
         this->focus_distance *
         std::tan(Utility::degrees_to_radians(this->defocus_angle / 2));
     this->defocus_disk_horizontal_radius = this->right * defocus_radius;
     this->defocus_disk_vertical_radius = this->up * defocus_radius;
-    std::clog << defocus_disk_horizontal_radius.x() << " "
-              << defocus_disk_horizontal_radius.y() << " "
-              << defocus_disk_horizontal_radius.z() << " "
-              << defocus_disk_vertical_radius.x() << " "
-              << defocus_disk_vertical_radius.y() << " "
-              << defocus_disk_vertical_radius.z() << std::endl;
 
     // Pixel sample scale
     this->pixel_sample_scales = 1.0 / this->samples_per_pixel;
-    std::clog << pixel_sample_scales << std::endl;
   };
 
   Ray get_ray(int i, int j) const {
@@ -120,7 +111,8 @@ private:
     const Point3 ray_origin =
         (this->defocus_angle <= 0) ? this->center : this->defocus_disk_sample();
     const Vect3 ray_direction = pixel_sample - ray_origin;
-    return { ray_origin, ray_direction };
+    const double ray_time = Utility::random_double();
+    return { ray_origin, ray_direction, ray_time };
   };
 
   Vect3 sample_square() const {
@@ -132,7 +124,6 @@ private:
 
   Point3 defocus_disk_sample() const {
     const Point3 p = random_in_unit_disk();
-    //std::clog << p.x() << " " << p.y() << " " << p.z() << std::endl;
     return this->center + (p[0] * this->defocus_disk_horizontal_radius) +
            (p[1] * this->defocus_disk_vertical_radius);
   };

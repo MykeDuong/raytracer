@@ -47,7 +47,7 @@ public:
   std::optional<ScatterRecord> scatter(const Ray& ray_in, const HitRecord& record) const override {
     Vect3 reflected = reflect(ray_in.direction(), record.normal);
     reflected = unit_vector(reflected) + (this->fuzz * random_unit_vector());
-    Ray scattered { record.p, reflected };
+    Ray scattered { record.p, reflected, ray_in.time() };
     if (dot(scattered.direction(), record.normal) <= 0) {
       return std::nullopt;
     }
@@ -75,7 +75,7 @@ public:
       reflect(unit_direction, record.normal) : 
       refract(unit_direction, record.normal, etai_over_etat);
 
-    return ScatterRecord { Ray(record.p, direction), Color {1.0, 1.0, 1.0} };
+    return ScatterRecord { Ray(record.p, direction, ray_in.time()), Color {1.0, 1.0, 1.0} };
   }
 
 private:

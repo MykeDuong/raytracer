@@ -102,7 +102,7 @@ constexpr inline Vect3 cross(const Vect3 &u, const Vect3 &v) {
   };
 }
 
-constexpr inline Vect3 unit_vector(const Vect3 &u) { return u / u.length(); }
+inline Vect3 unit_vector(const Vect3 &u) { return u / u.length(); }
 
 inline Vect3 refract(const Vect3 &uv, const Vect3 &normal,
                      const double etai_over_etat) {
@@ -126,7 +126,6 @@ inline Vect3 random_unit_vector() {
     if (1e-160 < lensq) { // && lensq <= 1) {
       return p / std::sqrt(lensq);
     }
-    // std::clog << lensq << "Failed. Random unit retry\n";
   }
 }
 
@@ -150,3 +149,4 @@ inline Vect3 random_in_unit_disk() {
     }
   }
 }
+

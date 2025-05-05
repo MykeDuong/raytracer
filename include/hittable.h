@@ -1,5 +1,6 @@
 #pragma once
 
+#include "bounding_box.h"
 #include "point3.h"
 #include "ray.h"
 #include "vect3.h"
@@ -40,5 +41,8 @@ struct HitRecord {
 class Hittable {
 public:
   virtual ~Hittable() = default;
+
   virtual std::optional<HitRecord> hit(const Ray& ray, const Interval ray_t) const = 0;
+
+  virtual BoundingBox bounding_box() const = 0;
 };
